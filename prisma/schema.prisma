@@ -1,0 +1,92 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  name         String
+  password     String
+  role         Role         @default(STAFF)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  departmentId String?
+  submissions  Submission[]
+}
+
+model Department {
+  id          String             @id @default(cuid())
+  name        String
+  users       User[]
+  submissions Submission[]
+  periods     SubmissionPeriod[]
+  categories  Category[]
+}
+
+model SubmissionPeriod {
+  id           String       @id @default(cuid())
+  status       PeriodStatus @default(OPEN)
+  startDate    DateTime
+  endDate      DateTime
+  department   Department   @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId String
+  submissions  Submission[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Category {
+  id           String       @id @default(cuid())
+  name         String
+  description  String?
+  submissions  Submission[]
+  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId String?
+}
+
+model Submission {
+  id            String           @id @default(cuid())
+  title         String
+  description   String
+  quantity      Int
+  unitPrice     Float
+  reference     String?
+  justification String?
+  status        SubmissionStatus @default(PENDING)
+  feedback      String?
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  department    Department       @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId  String
+  category      Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId    String
+  period        SubmissionPeriod @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  periodId      String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+enum Role {
+  ADMIN
+  DEPARTMENT_HEAD
+  STAFF
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  NEEDS_REVISION
+}
+
+enum PeriodStatus {
+  OPEN
+  CLOSED
+  ARCHIVED
+}
