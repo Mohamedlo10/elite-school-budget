@@ -82,10 +82,10 @@ export default function Home() {
                 height={32}
                 className="dark:invert"
               />
-              <span className="text-xl font-bold">ReqAcad</span>
+              <span className="text-xl font-bold">Elite Budgetisation</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} ReqAcad. Tous droits réservés.
+              © {new Date().getFullYear()} Elite Budgetisation. Tous droits réservés.
             </p>
           </div>
         </div>

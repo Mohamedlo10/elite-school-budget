@@ -1,5 +1,5 @@
-import { LoginForm } from "@/components/login-form"
-import Image from "next/image"
+import { LoginForm } from "@/components/login-form";
+import Image from "next/image";
 
 export default function LoginPage() {
   return (
@@ -9,7 +9,7 @@ export default function LoginPage() {
         <div className="relative hidden h-full flex-col bg-muted p-10 dark:border-r md:flex">
           <div className="absolute inset-0 bg-zinc-900">
             <Image
-              src="/budget2.jpg" 
+              src="/budget2.jpg"
               alt="Background"
               fill
               className="object-cover opacity-20"
@@ -24,17 +24,6 @@ export default function LoginPage() {
               className="mr-2 dark:invert"
             />
             EliteBudget
-          </div>
-          <div className="relative z-20 mt-auto">
-            <blockquote className="space-y-2">
-              <p className="text-lg text-white">
-                "Cette plateforme a révolutionné la gestion de notre budget départemental. 
-                Simple, efficace et intuitive."
-              </p>
-              <footer className="text-sm text-gray-300">
-                Prof. Sophie Martin - Département d'Informatique
-              </footer>
-            </blockquote>
           </div>
         </div>
 
@@ -53,11 +42,17 @@ export default function LoginPage() {
             <LoginForm />
             <p className="px-8 text-center text-sm text-muted-foreground">
               En vous connectant, vous acceptez nos{" "}
-              <a href="#" className="underline underline-offset-4 hover:text-primary">
+              <a
+                href="#"
+                className="underline underline-offset-4 hover:text-primary"
+              >
                 Conditions d'utilisation
               </a>{" "}
               et notre{" "}
-              <a href="#" className="underline underline-offset-4 hover:text-primary">
+              <a
+                href="#"
+                className="underline underline-offset-4 hover:text-primary"
+              >
                 Politique de confidentialité
               </a>
               .
@@ -66,5 +61,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
