@@ -1,7 +1,13 @@
-import prisma from '../prisma/client';
-import { CreateSubmissionDto, UpdateSubmissionDto } from '../types/submission-types';
+import prisma from "../prisma/client";
+import {
+  CreateSubmissionDto,
+  UpdateSubmissionDto,
+} from "../types/submission-types";
 
-export async function create(createSubmissionDto: CreateSubmissionDto, userId: string) {
+export async function create(
+  createSubmissionDto: CreateSubmissionDto,
+  userId: string
+) {
   // First verify the user belongs to the department
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -13,7 +19,7 @@ export async function create(createSubmissionDto: CreateSubmissionDto, userId: s
   }
 
   if (!user.departmentId) {
-    throw new Error('User must belong to a department to create submissions');
+    throw new Error("User must belong to a department to create submissions");
   }
 
   // Ensure submission is created for user's department
@@ -60,14 +66,21 @@ export async function findOne(id: string) {
 
   return submission;
 }
-/*
-export async function update(id: string, updateSubmissionDto: UpdateSubmissionDto) {
+
+export async function update(
+  id: string,
+  updateSubmissionDto: UpdateSubmissionDto
+) {
   try {
+    // Remove categoryId if it's undefined or null to satisfy Prisma's type
+    const data = Object.fromEntries(
+      Object.entries(updateSubmissionDto).filter(
+        ([key, value]) => !(key === "categoryId" && value === undefined)
+      )
+    );
     return await prisma.submission.update({
       where: { id },
-      data: {
-        ...updateSubmissionDto
-      },
+      data,
       include: {
         user: true,
         department: true,
@@ -78,7 +91,7 @@ export async function update(id: string, updateSubmissionDto: UpdateSubmissionDt
   } catch (error) {
     throw new Error(`Submission with ID ${id} not found`);
   }
-}*/
+}
 
 export async function remove(id: string) {
   try {
@@ -96,7 +109,11 @@ export async function remove(id: string) {
   }
 }
 
-export async function updateStatus(id: string, status: string, feedback?: string) {
+export async function updateStatus(
+  id: string,
+  status: string,
+  feedback?: string
+) {
   try {
     return await prisma.submission.update({
       where: { id },
@@ -142,7 +159,7 @@ export async function findByDepartment(departmentId: string) {
       period: true,
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
-} 
+}
