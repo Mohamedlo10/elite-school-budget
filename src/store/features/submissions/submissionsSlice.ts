@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { API_URL } from '@/config/constants';
-import { Submission } from '@/types/models';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { API_URL } from "@/config/constants";
+import { Submission } from "@/types/models";
 
 interface SubmissionsState {
   submissions: Submission[];
@@ -15,17 +15,20 @@ const initialState: SubmissionsState = {
 };
 
 export const fetchDepartmentSubmissions = createAsyncThunk(
-  'submissions/fetchDepartment',
+  "submissions/fetchDepartment",
   async (departmentId: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_URL}/departments/${departmentId}/submissions`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      const response = await fetch(
+        `${API_URL}/departments/${departmentId}/submissions`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des soumissions');
+        throw new Error("Erreur lors de la récupération des soumissions");
       }
 
       return await response.json();
@@ -35,30 +38,32 @@ export const fetchDepartmentSubmissions = createAsyncThunk(
   }
 );
 
-
 export const updateSubmissionStatus = createAsyncThunk(
-  'submissions/updateStatus',
-  async ({ 
-    id, 
-    status,
-    comment 
-  }: { 
-    id?: string;
-    status: string;
-    comment?: string;
-  }, { rejectWithValue }) => {
+  "submissions/updateStatus",
+  async (
+    {
+      id,
+      status,
+      comment,
+    }: {
+      id?: string;
+      status: string;
+      comment?: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await fetch(`${API_URL}/submissions/${id}/status`, {
-        method: 'PUT',
+        method: "PATCH", // <-- PATCH au lieu de PUT
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ status, comment: comment }),
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la mise à jour');
+        throw new Error("Erreur lors de la mise à jour");
       }
 
       return await response.json();
@@ -69,31 +74,36 @@ export const updateSubmissionStatus = createAsyncThunk(
 );
 
 export const createSubmission = createAsyncThunk(
-  'submissions/create',
-  async (submissionData: {
-    title: string;
-    description: string;
-    quantity: number;
-    unitPrice: number;
-    reference?: string;
-    justification?: string;
-    categoryId: string;
-    departmentId?: string;
-    periodId?: string;
-  }, { rejectWithValue }) => {
+  "submissions/create",
+  async (
+    submissionData: {
+      title: string;
+      description: string;
+      quantity: number;
+      unitPrice: number;
+      reference?: string;
+      justification?: string;
+      categoryId: string;
+      departmentId?: string;
+      periodId?: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await fetch(`${API_URL}/submissions`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(submissionData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Erreur lors de la création de la soumission');
+        throw new Error(
+          errorData.message || "Erreur lors de la création de la soumission"
+        );
       }
 
       return await response.json();
@@ -104,17 +114,17 @@ export const createSubmission = createAsyncThunk(
 );
 
 export const fetchUserSubmissions = createAsyncThunk(
-  'submissions/fetchUserSubmissions',
+  "submissions/fetchUserSubmissions",
   async (userId: string, { rejectWithValue }) => {
     try {
       const response = await fetch(`${API_URL}/users/${userId}/submissions`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération de vos soumissions');
+        throw new Error("Erreur lors de la récupération de vos soumissions");
       }
 
       return await response.json();
@@ -125,26 +135,29 @@ export const fetchUserSubmissions = createAsyncThunk(
 );
 
 export const updateSubmissionComment = createAsyncThunk(
-  'submissions/updateComment',
-  async ({ 
-    id, 
-    comment 
-  }: { 
-    id: string;
-    comment: string;
-  }, { rejectWithValue }) => {
+  "submissions/updateComment",
+  async (
+    {
+      id,
+      comment,
+    }: {
+      id: string;
+      comment: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await fetch(`${API_URL}/submissions/${id}/comment`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ feedback: comment }),
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la mise à jour du commentaire');
+        throw new Error("Erreur lors de la mise à jour du commentaire");
       }
 
       return await response.json();
@@ -155,17 +168,17 @@ export const updateSubmissionComment = createAsyncThunk(
 );
 
 export const fetchAllSubmissions = createAsyncThunk(
-  'submissions/fetchAll',
+  "submissions/fetchAll",
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetch(`${API_URL}/submissions`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des soumissions');
+        throw new Error("Erreur lors de la récupération des soumissions");
       }
 
       return await response.json();
@@ -176,7 +189,7 @@ export const fetchAllSubmissions = createAsyncThunk(
 );
 
 const submissionsSlice = createSlice({
-  name: 'submissions',
+  name: "submissions",
   initialState,
   reducers: {
     resetSubmissions: () => initialState,
@@ -196,7 +209,9 @@ const submissionsSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(updateSubmissionStatus.fulfilled, (state, action) => {
-        const index = state.submissions.findIndex(sub => sub.id === action.payload.id);
+        const index = state.submissions.findIndex(
+          (sub) => sub.id === action.payload.id
+        );
         if (index !== -1) {
           state.submissions[index] = action.payload;
         }
@@ -217,7 +232,9 @@ const submissionsSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(updateSubmissionComment.fulfilled, (state, action) => {
-        const index = state.submissions.findIndex(sub => sub.id === action.payload.id);
+        const index = state.submissions.findIndex(
+          (sub) => sub.id === action.payload.id
+        );
         if (index !== -1) {
           state.submissions[index] = action.payload;
         }
@@ -238,4 +255,4 @@ const submissionsSlice = createSlice({
 });
 
 export const { resetSubmissions } = submissionsSlice.actions;
-export default submissionsSlice.reducer; 
+export default submissionsSlice.reducer;
